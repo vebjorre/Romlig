@@ -1,0 +1,56 @@
+---
+title: "Assignment 1"
+author: "Vebjørn Rekkebo, Camilla Karlsen"
+date: "`r format(Sys.time(), '%d.%m.%Y')`"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Problem 1: Gaussian RF - model characteristics
+
+## a)
+
+## b)
+
+## c)
+
+## d)
+
+## e)
+
+## f)
+
+## g)
+
+
+# Problem 2: Gaussian RF  - real data
+
+## a)
+
+## b)
+
+## c)
+
+## d)
+
+## e)
+
+## f)
+
+
+# Problem 3 - Parameter estimation
+
+## a)
+
+## b)
+
+## c)
+
+## d)
+
+## e)
+
+## f)
