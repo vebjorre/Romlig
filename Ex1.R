@@ -266,7 +266,14 @@ integral1 = integral1/100
 
 integral2 <- 0
 for (i in 1:50){
-    if (mean.emp2[i] > 2){
+    if (rhat1[i] > 2){
       integral2 = integral2 + 1
     }
+}
+
+integral3 <- 0
+for (i in 1:50){
+  if (r[i] > 2){
+    integral3 = integral3 + 1
+  }
 }

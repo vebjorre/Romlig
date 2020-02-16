@@ -15,7 +15,7 @@ L <- expand.grid(x=x,y=x)
 coords <- matrix(data=cbind(data$x,data$y),ncol=2)
 
 
-control <- krige.control(type.krige="OK",cov.model="powered.exponential",cov.pars=c(2500,100),kappa=1.5)
+control <- krige.control(type.krige="OK",cov.model="powered.exponential",cov.pars=c(2500,100),kappa=1.5, trend.d="cte", trend.l="cte")
 krig <- krige.conv(coords=coords, data=data$z, krige=control, locations=L)
 krig.predict <- matrix(krig$predict, nrow=315, ncol=315)
 krig.var <- matrix(krig$krige.var, nrow=315, ncol=315)
@@ -26,16 +26,6 @@ image.plot(krig.var, xlab="x", ylab="y", cex.lab=1.4)
 
 
 ##d)
-H <- abs(x%*%t(rep(1,315))-rep(1,315) %*% t(x))
-Sigma.r <- exp(-(0.01*H)^1.5) #ikke gange med sigma?
-Sigma.d <- Sigma.r[data$x,data$y] #??
-
-g <- function(coords){
-  return(cbind(rep(1,52),coords[,1],coords[,2],coords[,1]*coords[,2],coords[,1]^2,coords[,2]^2))
-}
-
-G <- g(coords)
-
 control2 <- krige.control(type.krige="OK",cov.model="powered.exponential",cov.pars=c(2500,100),kappa=1.5, trend.d="2nd", trend.l="2nd")
 krig2 <- krige.conv(coords=coords, data=data$z, krige=control2, locations=L)
 
@@ -53,4 +43,4 @@ sigma_0 <- sqrt(krig.var[100,100])
 p850 <- pnorm(x_0, mu_0, sigma_0, lower.tail=FALSE)
 p850
 upper <- mu_0 + sigma_0 * qnorm(0.1,lower.tail=FALSE)
-upper85
+upper
