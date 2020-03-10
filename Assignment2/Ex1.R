@@ -13,7 +13,7 @@ cells_df <- data.frame(x=cells$x,y=cells$y)
 redwood_df <- data.frame(x=redwood$x,y=redwood$y)
 pines_df <- data.frame(x=pines$x,y=pines$y)
 
-par(mfrow=c(2,2))
+par(mfrow=c(1,1))
 plot(cells_df)
 plot(redwood_df)
 plot(pines_df)
