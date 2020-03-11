@@ -3,7 +3,7 @@ redwood <- as.list(read.table("https://www.math.ntnu.no/emner/TMA4250/2020v/Exer
 redwood_df <- data.frame(x=redwood$x,y=redwood$y)
 
 #MCMC-test
-MCMC_test <- function(n, L_hat, lambda_M, sigma_c, lambda_c){
+MCMC_test_NS <- function(L_hat, lambda_M, sigma_c, lambda_c){
   L_NS <- matrix(0,100,70)
   for (i in 1:100){
     NS <- Neuman_Scott(lambda_M, sigma_c, lambda_c)
@@ -59,7 +59,7 @@ plot(L_NS, xlab="t", ylab="L(t)")
 lines(L_NS$x,L_NS$x)
 
 #Evaluate the parameter values by MCMC-test on the L-interaction function
-MCMC_test(length(NS_df$x),L_redwood, lambda_M, sigma_c, lambda_c)
+MCMC_test_NS(L_redwood, lambda_M, sigma_c, lambda_c)
 
 #Iterate our gestimate procedure to improve the fit
 lambda_M_new <- 20
@@ -69,5 +69,5 @@ NS_new <- Neuman_Scott(lambda_M_new, sigma_c_new,lambda_c_new)
 plot(NS_new, xlab="x", ylab="y")
 NS_df_new <- data.frame(x=NS_new[,1],y=NS_new[,2])
 L_NS_new <- Kfn(NS_df_new,1)
-MCMC_test(length(NS_df_new$x),L_redwood,lambda_M_new, sigma_c_new, lambda_c_new)
+MCMC_test_NS(L_redwood,lambda_M_new, sigma_c_new, lambda_c_new)
   
