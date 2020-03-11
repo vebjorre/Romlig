@@ -3,25 +3,23 @@ redwood <- as.list(read.table("https://www.math.ntnu.no/emner/TMA4250/2020v/Exer
 redwood_df <- data.frame(x=redwood$x,y=redwood$y)
 
 #MCMC-test
-MCMC_test <- function(n, L_hat){
-  L <- matrix(0,100,70)
+MCMC_test <- function(n, L_hat, lambda_M, sigma_c, lambda_c){
+  L_NS <- matrix(0,100,70)
   for (i in 1:100){
-    x <- runif(n)
-    y <- runif(n)
-    xy <- list(x=x,y=y)
-    L[i,] <- Kfn(xy,1)$y
+    NS <- Neuman_Scott(lambda_M, sigma_c, lambda_c)
+    NS_df <- data.frame(x=NS[,1],y=NS[,2])
+    L_NS[i,] <- Kfn(NS_df,1)$y
   }
   q <- matrix(0,2,70)
   for (j in 1:70){
-    q[,j] <- quantile(L[,j], c(0.05,0.95))
+    q[,j] <- quantile(L_NS[,j], c(0.05,0.95))
   }
-  plot(L_hat, type="l", ylim=c(0,0.7))
+  plot(L_hat, type="l", ylim=c(0,0.7), xlab="t", ylab="L(t)")
   lines(L_hat$x,q[1,], lty=2, col="red")
   lines(L_hat$x,q[2,], lty=2, col="red")
 }
 
 Neuman_Scott <- function(lambda_M,sigma_c,lambda_c){
-  set.seed(222)
   k <- 0 #total number of events
   D <- 1 #domain
   lambda_MD <- lambda_M*D 
@@ -29,8 +27,7 @@ Neuman_Scott <- function(lambda_M,sigma_c,lambda_c){
   x <- matrix(0,0,2)
   for (j in 1:k_M){ #iterate through the mothers
     x_M <- runif(2,0,1) #Sample uniformly from D to get mother location
-    k_c <- rpois(1,lambda_c) #sample to get child count
-    x_j <- matrix(0,k_c,2) #Child events after torus border condition
+    k_c <- rpois(1,lambda_c) #Child count
     for (i in 1:k_c){ #iterate through the children in mother[j]
       x_p <- rmvnorm(x_M,sigma_c*diag(2)) #children location with mother[j] as senter
       if (x_p[1]>0 && x_p[1]<1 && x_p[2]>0 && x_p[2]<1 ){ #Check if children is inside D
@@ -44,33 +41,33 @@ Neuman_Scott <- function(lambda_M,sigma_c,lambda_c){
 }
 
 #Plot redwood
-plot(redwood_df)
+plot(redwood_df,xlab="x", ylab="y")
+L_redwood <- Kfn(redwood_df,1)
 
 #Plot one realisation of Neuman Scott event RF with guestimated parameters
-lambda_M <- 9 #number of clusters in redwood
-sigma_c <- 0.002 #try and fail - spredning
-lambda_c <- 6.9 #number of observations divided by number of clusters  - 62/9
+lambda_M <- 8 #number of clusters in redwood
+sigma_c <- 0.002 #trial and error - spred in the cluster 
+lambda_c <- 7.75 #number of observations divided by number of clusters  - 62/8
 NS <- Neuman_Scott(lambda_M, sigma_c,lambda_c)
-plot(NS)
+plot(NS, xlab="x", ylab="y")
 
 
 #L-function 
 NS_df <- data.frame(x=NS[,1],y=NS[,2])
 L_NS <- Kfn(NS_df,1)
-plot(L_NS)
+plot(L_NS, xlab="t", ylab="L(t)")
 lines(L_NS$x,L_NS$x)
 
 #Evaluate the parameter values by MCMC-test on the L-interaction function
-MCMC_test(length(NS_df$x),L_NS)
+MCMC_test(length(NS_df$x),L_redwood, lambda_M, sigma_c, lambda_c)
 
 #Iterate our gestimate procedure to improve the fit
-lambda_M <- 10
-lambda_c <- 16
-sigma_c <- 0.0015
-NS <- Neuman_Scott(lambda_M, sigma_c,lambda_c)
-plot(NS)
-NS_df <- data.frame(x=NS[,1],y=NS[,2])
-L_NS <- Kfn(NS_df,1)
-MCMC_test(length(NS_df$x),L_NS)
-
-
+lambda_M_new <- 20
+lambda_c_new <- 5
+sigma_c_new <- 0.002
+NS_new <- Neuman_Scott(lambda_M_new, sigma_c_new,lambda_c_new)
+plot(NS_new, xlab="x", ylab="y")
+NS_df_new <- data.frame(x=NS_new[,1],y=NS_new[,2])
+L_NS_new <- Kfn(NS_df_new,1)
+MCMC_test(length(NS_df_new$x),L_redwood,lambda_M_new, sigma_c_new, lambda_c_new)
+  
