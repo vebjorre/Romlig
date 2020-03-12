@@ -62,8 +62,8 @@ lines(L_NS$x,L_NS$x)
 MCMC_test_NS(L_redwood, lambda_M, sigma_c, lambda_c)
 
 #Iterate our gestimate procedure to improve the fit
-lambda_M_new <- 20
-lambda_c_new <- 5
+lambda_M_new <- 15
+lambda_c_new <- 4
 sigma_c_new <- 0.002
 NS_new <- Neuman_Scott(lambda_M_new, sigma_c_new,lambda_c_new)
 plot(NS_new, xlab="x", ylab="y")
