@@ -2,12 +2,12 @@ cells <- as.list(read.table("https://www.math.ntnu.no/emner/TMA4250/2020v/Exerci
 cells_df <- data.frame(x=cells$x,y=cells$y)
 
 #Plot cells
-plot(cells_df,xlab="x", ylab="y")
+plot(cells_df,xlab="x", ylab="y",xlim=c(0,1), ylim=c(0,1))
 L_cells <- Kfn(cells_df,1)
 
 #Strauss Event RF
 Strauss <- function(k,tau0, phi0, phi1,n=1000){
-  X <- matrix(runif(k,0,1),k,2) 
+  X <- matrix(runif(k*2,0,1),k,2) 
   for (i in 1:n){
     u <- sample(1:k,1)
     x_p <- runif(2,0,1)
@@ -55,11 +55,11 @@ MCMC_test_Strauss <- function(L_hat, tau_0, phi_0, phi_1){
   
 #Plot one realisation of Strauss event RF with guestimated parameters
 k <- 42 #observations
-tau0 <- 1e-10
-phi0 <- 100
+tau0 <- 1/k
+phi0 <- 7
 phi1 <- 10
 S <- Strauss(k, tau0, phi0, phi1)
-plot(S, xlab="x", ylab="y")
+plot(S, xlab="x", ylab="y",xlim=c(0,1), ylim=c(0,1))
 
 #L-function 
 S_df <- data.frame(x=S[,1],y=S[,2])
@@ -71,11 +71,11 @@ lines(L_S$x,L_S$x)
 MCMC_test_Strauss(L_cells, tau0, phi0, phi1)
 
 #Iterate our gestimate procedure to improve the fit
-tau0_new <- 1e-4 
-phi0_new <- 1e-2 
+tau0_new <- 1/k
+phi0_new <- 10
 phi1_new <- 100 
 S_new <- Strauss(k, tau0_new, phi0_new, phi1_new)
-plot(S_new, xlab="x", ylab="y")
+plot(S_new, xlab="x", ylab="y",xlim=c(0,1), ylim=c(0,1))
 S_df_new <- data.frame(x=S_new[,1],y=S_new[,2])
 L_S_new <- Kfn(S_df_new,1)
 MCMC_test_Strauss(L_cells,tau0_new, phi0_new, phi1_new)

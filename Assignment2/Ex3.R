@@ -44,7 +44,7 @@ Neuman_Scott <- function(lambda_M,sigma_c,lambda_c){
 }
 
 #Plot redwood
-plot(redwood_df,xlab="x", ylab="y")
+plot(redwood_df,xlab="x", ylab="y",xlim=c(0,1), ylim=c(0,1))
 L_redwood <- Kfn(redwood_df,1)
 
 #Plot one realisation of Neuman Scott event RF with guestimated parameters
@@ -52,7 +52,7 @@ lambda_M <- 8 #number of clusters in redwood
 sigma_c <- 0.002 #trial and error - spred in the cluster 
 lambda_c <- 7.75 #number of observations divided by number of clusters  - 62/8
 NS <- Neuman_Scott(lambda_M, sigma_c,lambda_c)
-plot(NS, xlab="x", ylab="y")
+plot(NS, xlab="x", ylab="y", xlim=c(0,1), ylim=c(0,1))
 
 
 #L-function 
@@ -65,7 +65,7 @@ lines(L_NS$x,L_NS$x)
 MCMC_test_NS(L_redwood, lambda_M, sigma_c, lambda_c)
 
 #Iterate our gestimate procedure to improve the fit
-lambda_M_new <- 15
+lambda_M_new <- 16
 lambda_c_new <- 4
 sigma_c_new <- 0.002
 NS_new <- Neuman_Scott(lambda_M_new, sigma_c_new,lambda_c_new)
