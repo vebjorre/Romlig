@@ -1,6 +1,9 @@
 library(dae)
+library(spatial)
+
 redwood <- as.list(read.table("https://www.math.ntnu.no/emner/TMA4250/2020v/Exercise2/redwood.dat",col.names= c('x', 'y')))
 redwood_df <- data.frame(x=redwood$x,y=redwood$y)
+ppregion(0,1,0,1)
 
 #MCMC-test
 MCMC_test_NS <- function(L_hat, lambda_M, sigma_c, lambda_c){
@@ -70,4 +73,3 @@ plot(NS_new, xlab="x", ylab="y")
 NS_df_new <- data.frame(x=NS_new[,1],y=NS_new[,2])
 L_NS_new <- Kfn(NS_df_new,1)
 MCMC_test_NS(L_redwood,lambda_M_new, sigma_c_new, lambda_c_new)
-  
