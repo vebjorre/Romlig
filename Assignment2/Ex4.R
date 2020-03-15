@@ -61,17 +61,17 @@ k <- 42 #observations
 tau0 <- min(nndist(cells))
 phi0 <- 10
 phi1 <- 100
-S <- Strauss(k, tau0, phi0, phi1,10000)
+S <- Strauss(k, tau0, phi0, phi1, n=10000)
 plot(S, xlab="x", ylab="y",xlim=c(0,1), ylim=c(0,1))
 
 #L-function 
-# S_df <- data.frame(x=S[,1],y=S[,2])
-# L_S <- Kfn(S_df,1)
-# plot(L_S, xlab="t", ylab="L(t)")
-# lines(L_S$x,L_S$x)
+S_df <- data.frame(x=S[,1],y=S[,2])
+L_S <- Kfn(S_df,1)
+plot(L_S, xlab="t", ylab="L(t)")
+lines(L_S$x,L_S$x)
 
 #Evaluate the parameter values by MCMC-test on the L-interaction function
-MCMC_test_Strauss(L_cells, 0.095, 7, 100)
+MCMC_test_Strauss(L_cells, tau_0, phi_0, phi1)
 
 #Iterate our gestimate procedure to improve the fit
 tau0_new <- 0.095
