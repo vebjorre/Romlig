@@ -1,10 +1,7 @@
 library(MASS)
 library(spatial)
 
-#cells <- ppinit("cells.dat") #repulsive
-#redwood <- ppinit("redwood.dat") #clustered
-#pines <- ppinit("pines.dat") #Stationary
-
+#import data
 cells <- as.list(read.table("https://www.math.ntnu.no/emner/TMA4250/2020v/Exercise2/cells.dat",col.names= c('x', 'y')))
 redwood <- as.list(read.table("https://www.math.ntnu.no/emner/TMA4250/2020v/Exercise2/redwood.dat",col.names= c('x', 'y')))
 pines <- ppinit("https://www.math.ntnu.no/emner/TMA4250/2020v/Exercise2/pines.dat")
@@ -13,6 +10,7 @@ cells_df <- data.frame(x=cells$x,y=cells$y)
 redwood_df <- data.frame(x=redwood$x,y=redwood$y)
 pines_df <- data.frame(x=pines$x,y=pines$y)
 
+#plot data
 par(mfrow=c(1,1))
 plot(cells_df, xlim=c(0,1), ylim=c(0,1))
 plot(redwood_df, xlim=c(0,1), ylim=c(0,1))

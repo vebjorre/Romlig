@@ -82,12 +82,14 @@ for (i in 1:nsims){
   plot(post.loc[[i]], col="darkgreen", xlab="x", ylab="y")
 }
 
+#Simulate 100 count models from prior and posterior
 nsims <- 100
 sample.prior <- replicate(nsims, rpois(n,pihat))
 mean.prior <- rowMeans(sample.prior)
 sample.post <- replicate(nsims, rpois(n,intensity.post))
 mean.post <- rowMeans(sample.post)
 
+#Mean of 100 realizations
 mean.plots <- vector("list", 2)
 d <- data
 d["pines"] <- mean.prior
