@@ -59,6 +59,7 @@ fill.m <- scale_fill_gradient2(midpoint=0.5)
 p + geom_raster(aes(fill=Mean)) + fill.m + theme + xlab("x") + ylab("y")
 fill.v <- scale_fill_gradient()
 p + geom_raster(aes(fill=Variance)) + fill.v + theme + xlab("x") + ylab("y")
+fill.d <- scale_fill_brewer(palette=4,type="qual")
 p + geom_raster(aes(fill=MMAP)) + fill.d + theme + xlab("x") + ylab("y")
 
 ### c)
@@ -196,7 +197,7 @@ ggplot(MCMC.df, aes(x=X1, y=X2, fill=factor(value))) +
 
 #Trace plot for sand proportion
 ratio.df <- data.frame("Iteration"=1:num_it, sandrate)
-ggplot(data=ratio.df, aes(Iteration,sandrate)) + geom_line()+theme
+ggplot(data=ratio.df, aes(Iteration,sandrate)) + geom_line() + ylab("Sand proportion")
 
 #Estimate moments of MCMC sample
 MCMC_mean <- rowMeans(MCMC_res[,-burnin])
