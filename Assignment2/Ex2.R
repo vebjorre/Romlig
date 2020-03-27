@@ -63,9 +63,10 @@ for (i in 1:nsims){
 intensity.post <- pihat*(1 - data$alpha)
 
 #Simulate posterior count models
-post.counts <- replicate(nsims, rpois(n, intensity.post))
+### CHANGED:
+post.counts <- replicate(nsims, rpois(n, intensity.post)+data$pines)
 
-#Plot posterior count models
+#Plot posterior count models (not included in report) 
 post.plots <- vector("list",nsims)
 for (i in 1:nsims){
   d <- data
@@ -76,6 +77,7 @@ for (i in 1:nsims){
 post.plots
 
 #Simulate and plot posterior location models
+### DIFFERENT BECAUSE OF CHANGE
 post.loc <- vector("list", nsims)
 for (i in 1:nsims){
   post.loc[[i]] <- counts2loc(post.counts[,i])
@@ -86,10 +88,12 @@ for (i in 1:nsims){
 nsims <- 100
 sample.prior <- replicate(nsims, rpois(n,pihat))
 mean.prior <- rowMeans(sample.prior)
-sample.post <- replicate(nsims, rpois(n,intensity.post))
+### CHANGED:
+sample.post <- replicate(nsims, rpois(n,intensity.post)+data$pines)
 mean.post <- rowMeans(sample.post)
 
 #Mean of 100 realizations
+### DIFFERENT BECAUSE OF CHANGE
 mean.plots <- vector("list", 2)
 d <- data
 d["pines"] <- mean.prior

@@ -109,7 +109,7 @@ loglik_i <- function(beta,l,dim,i){
   return (part1-part2)
 }
 
-#total loglikelihood to maximised wrt beta
+#total loglikelihood to be maximised wrt beta
 loglik <- function(beta,l,dim){
   n <- length(l)
   ll <- rep(NA,n)
