@@ -15,7 +15,7 @@ for (i in 1:(n*n))
 {
   for (j in 1:(n*n))
   {
-    rho[i,j] = exp(-dist[i,j]/ohi)
+    rho[i,j] = exp(-dist[i,j]/phi)
   }
 }
 
@@ -32,8 +32,13 @@ image.plot(Result, asp=1)
 
 #Variogram
 variogram.full <- variog(coords = kombi, data=Realisation)
-x=seq(1,41)
-correct.variogram <- sigma1*(1-(exp(-x/epsilon)))
+
+
+### 1 -> 0
+x=seq(0,41)
+
+### epsilon -> phi
+correct.variogram <- sigma1*(1-(exp(-x/phi)))
 plot(variogram.full,type="l")
 lines(correct.variogram,type="l")
 
