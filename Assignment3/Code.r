@@ -103,7 +103,7 @@ get_neighbours_bc <- function(l, dim, i){
 
 #loglikelihood of observation i
 loglik_i <- function(beta,l,dim,i){
-  neighb <- get_neighbours(l,dim,i)
+  neighb <- get_neighbours_bc(l,dim,i)
   part1 <- sum(l[i]==l[neighb])*log(beta)
   part2 <- log(beta^(sum(l[neighb]==0))+beta^(sum(l[neighb]==1)))
   return (part1-part2)

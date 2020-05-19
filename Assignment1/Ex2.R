@@ -22,7 +22,7 @@ krig.var <- matrix(krig$krige.var, nrow=315, ncol=315)
 image.plot(krig.predict, xlab="x", ylab="y", col=terrain.colors(30), cex.lab=1.4)
 contour(krig.predict, xlab="x", ylab="y", cex.lab=1.4)
 
-image.plot(krig.var, xlab="x", ylab="y", cex.lab=1.4)
+image.plot(krig.var, xlab="x", ylab="y", cex.lab=1.4, zlim=c(0,985))
 
 
 ##d)
@@ -34,7 +34,7 @@ krig2.var <- matrix(krig2$krige.var, nrow=315, ncol=315)
 image.plot(krig2.predict, xlab="x", ylab="y", col=terrain.colors(30), cex.lab=1.4)
 contour(krig2.predict, xlab="x", ylab="y", cex.lab=1.4)
 
-image.plot(krig2.var, xlab="x", ylab="y", cex.lab=1.4)
+image.plot(krig2.var, xlab="x", ylab="y", cex.lab=1.4, zlim=c(0,985))
 
 ##e)
 x_0 <- 850
