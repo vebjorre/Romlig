@@ -38,7 +38,8 @@ x=seq(0,41)
 variogram.full <- variog(coords = kombi, data=Realisation)
 correct.variogram <- sigma1*(1-(exp(-x/phi)))
 plot(variogram.full,type="l",xlab=bquote(tau),ylab=bquote(gamma[r](tau)))
-lines(correct.variogram,type="l")
+lines(c(0,variogram.full$u[1]),c(0,variogram.full$v[1]))
+lines(x,correct.variogram,type="l",col="red")
 
 #c - repeat a) and b) three times
 
@@ -72,8 +73,9 @@ variogram <- function(m){
   coords <- generate.locations(m)
   data=Result$z[coords]
   variogram.obs <- variog(coords = coords, data=data)
-  plot(variogram.obs,type="l",ylim=c(0,4))
-  lines(correct.variogram,type="l",col = "red")
+  plot(variogram.obs,type="l",ylim=c(0,4),xlab=bquote(tau),ylab=bquote(gamma[r](tau)))
+  lines(c(0,variogram.obs$u[1]), c(0,variogram.obs$v[1]))
+  lines(x,correct.variogram,type="l",col = "red")
   lik.obs <- likfit(coords = coords, data=data, ini.cov.pars = cbind(2,3))
   lik.full <- likfit(coords = kombi, data=Realisation, ini.cov.pars = cbind(2,3))
   sigma.obs <- lik.obs$sigmasq
@@ -86,9 +88,9 @@ variogram <- function(m){
   phi.full <- lik.full$phi
   ml.variogram.obs <- sigma.obs*(1-(exp(-x/phi.obs)))
   ml.variogram.full <- sigma.full*(1-(exp(-x/phi.full)))
-  plot(ml.variogram.obs, type="l",ylim=c(0,3))
-  lines(ml.variogram.full, lty=2)
-  lines(correct.variogram,type="l",col = "red")
+  plot(x,ml.variogram.obs, type="l",ylim=c(0,3),xlab=bquote(tau),ylab=bquote(gamma[r](tau)))
+  lines(x,ml.variogram.full, lty=2)
+  lines(x,correct.variogram,type="l",col = "red")
 }
 variogram(36)
 
