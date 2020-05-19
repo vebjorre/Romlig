@@ -76,7 +76,11 @@ variogram <- function(m){
   lik.obs <- likfit(coords = coords, data=data, ini.cov.pars = cbind(2,3))
   lik.full <- likfit(coords = kombi, data=Realisation, ini.cov.pars = cbind(2,3))
   sigma.obs <- lik.obs$sigmasq
+  print("sigma_obs: ")
+  print(sigma.obs)
   sigma.full <-lik.full$sigmasq
+  print("sigma_full: ")
+  print(sigma.full)
   phi.obs <- lik.obs$phi
   phi.full <- lik.full$phi
   ml.variogram.obs <- sigma.obs*(1-(exp(-x/phi.obs)))
