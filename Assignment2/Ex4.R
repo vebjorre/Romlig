@@ -51,7 +51,7 @@ MCMC_test_Strauss <- function(L_hat, tau_0, phi_0, phi_1){
   for (j in 1:70){
     q[,j] <- quantile(L_S[,j], c(0.05,0.95))
   }
-  plot(L_hat, type="l", ylim=c(0,0.7), xlab="t", ylab="L(t)")
+  plot(L_hat, type="l", xlim=c(0,0.7),ylim=c(0,0.7), xlab="t", ylab="L(t)")
   lines(L_hat$x,q[1,], lty=2, col="red")
   lines(L_hat$x,q[2,], lty=2, col="red")
 }
@@ -79,6 +79,4 @@ phi0_new <- 7
 phi1_new <- 100 
 S_new <- Strauss(k, tau0_new, phi0_new, phi1_new, n=10000)
 plot(S_new, xlab="x", ylab="y",xlim=c(0,1), ylim=c(0,1))
-S_df_new <- data.frame(x=S_new[,1],y=S_new[,2])
-L_S_new <- Kfn(S_df_new,1)
 MCMC_test_Strauss(L_cells,tau0_new, phi0_new, phi1_new)
