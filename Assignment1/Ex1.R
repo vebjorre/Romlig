@@ -2,38 +2,30 @@ library(geoR)
 library(tidyverse)
 library(MASS)
 
+#Set figure parameters
 par(mar = c(5.1, 5.1, 4.1, 2.1))
 
+#Model parameters
 mu = 0
 x <- seq(1,50)
 sigma <- c(1,5)
 kappa_m <- c(1,3)
 kappa_p <- c(1,1.9)
 
+#Matrix with distances
 H <- abs(x%*%t(rep(1,50))-rep(1,50) %*% t(x))
 
-#correlation matrix
+#correlation matrices
 rho_matern1 <- cov.spatial(H,cov.model="matern",cov.pars=c(sigma[1],10),kappa=kappa_m[1])
 rho_matern2 <- cov.spatial(H,cov.model="matern",cov.pars=c(sigma[1],10),kappa=kappa_m[2])
 rho_pow.exp1 <- cov.spatial(H,cov.model="powered.exponential",cov.pars=c(sigma[1],10),kappa=kappa_p[1])
 rho_pow.exp2 <- cov.spatial(H,cov.model="powered.exponential",cov.pars=c(sigma[1],10),kappa=kappa_p[2])
 
-# rho_matern3 <- cov.spatial(H,cov.model="matern",cov.pars=c(sigma[2],10),kappa=kappa_m[1])
-# rho_matern4 <- cov.spatial(H,cov.model="matern",cov.pars=c(sigma[2],10),kappa=kappa_m[2])
-# rho_pow.exp3 <- cov.spatial(H,cov.model="powered.exponential",cov.pars=c(sigma[2],10),kappa=kappa_p[1])
-# rho_pow.exp4 <- cov.spatial(H,cov.model="powered.exponential",cov.pars=c(sigma[2],10),kappa=kappa_p[2])
-
+#plot correlation functions
 plot(rho_matern1[,1], type="l",xlab=bquote(tau),ylab=bquote(rho[r](tau)),cex.lab=1.4)
 lines(rho_matern2[,1], lty=2)
-
 plot(rho_pow.exp1[,1], type="l",xlab=bquote(tau),ylab=bquote(rho[r](tau)),cex.lab=1.4)
 lines(rho_pow.exp2[,1], lty=2)
-
-# plot(rho_matern3[,1], type="l")
-# plot(rho_matern4[,1], type="l")
-# plot(rho_pow.exp3[,1], type="l")
-# plot(rho_pow.exp4[,1], type="l")
-
 
 #variogram vectors
 gamma_matern1 <- sigma[1]*(1-rho_matern1[,1])
@@ -41,6 +33,7 @@ gamma_matern2 <- sigma[1]*(1-rho_matern2[,1])
 gamma_pow.exp1 <- sigma[1]*(1-rho_pow.exp1[,1])
 gamma_pow.exp2 <- sigma[1]*(1-rho_pow.exp2[,1])
 
+#plot variograms
 plot(gamma_matern1, type="l",xlab=bquote(tau),ylab=bquote(gamma[r](tau)),cex.lab=1.4)
 lines(gamma_matern2, lty=2)
 plot(gamma_pow.exp1, type="l",xlab=bquote(tau),ylab=bquote(gamma[r](tau)),cex.lab=1.4)
@@ -48,7 +41,7 @@ lines(gamma_pow.exp2, lty=2)
 
 
 ##b)
-
+#covariance matrices
 Sigma1_m1 <- sigma[1]*rho_matern1
 Sigma1_m2 <- sigma[1]*rho_matern2
 Sigma1_p1 <- sigma[1]*rho_pow.exp1
@@ -58,11 +51,17 @@ Sigma2_m2 <- sigma[2]*rho_matern2
 Sigma2_p1 <- sigma[2]*rho_pow.exp1
 Sigma2_p2 <- sigma[2]*rho_pow.exp2
 
+#Generate 4 realizations from each of the 8 models
+
 r1 <- matrix(0,50,4)
+#Cholesky decomposition
 L <- t(chol(Sigma1_m1))
 set.seed(1)
+#Generate realization 1
 r1[,1] <- L %*% rnorm(50) + mu
+#Plot realization 1
 plot(r1[,1], type="l", ylim=c(-3,3), xlab=bquote(italic(x)), ylab=bquote(italic(r(x))), cex.lab=1.4)
+#Repeat 3 more times
 for (i in 2:4){
   set.seed(i)
   r1[,i] <- L %*% rnorm(50) + mu
@@ -152,23 +151,28 @@ for (i in 2:4){
 
 r <- r7[,1]
 
+#F defines which points are observed
 F <- matrix(0,3,50)
 F[1,10] <- 1
 F[2,25] <- 1
 F[3,30] <- 1
 
+#Observation variance
 sigma_obs <- c(0,0.25)
+#Observed data (with noise)
 y1 <- F %*% r + sigma_obs[1] * rnorm(3)
+#Estimate r
 C1=F %*%Sigma2_p1%*%t(F) # + 0
 rhat1=Sigma2_p1 %*% t(F) %*% solve(C1,y1)
-
+#Estimate variance of rhat
 Vhat1=Sigma2_p1-Sigma2_p1 %*% t(F)%*% solve(C1,(F %*%Sigma2_p1))
 var_r1=diag(Vhat1)
-
+#90% confidence interval
 rlow1=rhat1-1.28*sqrt(var_r1)
 rupp1=rhat1+1.28*sqrt(var_r1)
-df=data.frame(r,rhat1,rlow1,rupp1,x)
 
+#Plot result
+df=data.frame(r,rhat1,rlow1,rupp1,x)
 ggplot(data=df, aes(x=x, y=rhat1)) +
   geom_line(aes(y=rhat1), size=.8) +
   geom_line(aes(y=r),linetype=2, color=2, size=.8) +
@@ -178,7 +182,7 @@ ggplot(data=df, aes(x=x, y=rhat1)) +
   ylab(bquote(italic(r(x)))) +
   theme(axis.title=element_text(size=15))
 
-#### New sigma_obs
+#### Repeat with new observation variance
 
 y2 <- F %*% r + sigma_obs[2] * rnorm(3)
 C2=F %*%Sigma2_p1%*%t(F)+diag(sigma_obs[2],nrow=3,ncol=3)
@@ -202,23 +206,29 @@ ggplot(data=df, aes(x=x, y=rhat2)) +
 
 ##e)
 
+#Posterior prediction
 mu_post1 <- rhat1
+#Variance
 Sigma_post1 <- Vhat1
 Sigma_post1[10,10] <- 0.000001
 Sigma_post1[25,25] <- 0.000001
 Sigma_post1[30,30] <- 0.000001
+
+#Generate 100 realizations with estimated parameters
 r_post1 <- matrix(0,100,50)
 for (i in 1:100){
   r_post1[i,] <- mu_post1 + t(chol(Sigma_post1)) %*% rnorm(50)
 }
-
+#Estimate parameters from new realizations
 mean.emp1 <- colMeans(r_post1)
 var.emp1 <- diag(cov(r_post1))
+#90% confidence interval
 mean.emp1_low <- mean.emp1 - 1.28 * sqrt(var.emp1)
 mean.emp1_upp <- mean.emp1 + 1.28 * sqrt(var.emp1)
 real <- sort(rep(seq(1,100),50))
 post1.vec <- as.vector(t(r_post1))
 
+#Plot results
 post1.df <- data.frame(real,x=rep(x,100),r,post1.vec,mean.emp1,mean.emp1_low,mean.emp1_upp)
 ggplot(data=post1.df, aes(x=x, y=mean.emp1)) +
   geom_path(aes(y=post1.vec, group=real), colour=8) +
@@ -230,6 +240,7 @@ ggplot(data=post1.df, aes(x=x, y=mean.emp1)) +
   ylab(bquote(italic(r(x)))) +
   theme(axis.title=element_text(size=15))
 
+### Repeat with new observation variance
 mu_post2 <- rhat2
 Sigma_post2 <- Vhat2
 r_post2 <- matrix(0,100,50)
@@ -254,26 +265,31 @@ ggplot(data=post2.df, aes(x=x, y=mean.emp2)) +
   ylab(bquote(italic(r(x)))) +
   theme(axis.title=element_text(size=15)) 
 
+##f)
+
+#Estimate integral using realizations
 integral1 <- 0
 for (i in 1:50){
   for (j in 1:100){
-    if (r_post2[j,i] > 2){
-      integral1 = integral1 + 1
+    if (r_post1[j,i] > 2){
+      integral1 = integral1 + r_post1[j,i]-2
     }
   }
 }
 integral1 = integral1/100
 
+#Estimate integral using predictor
 integral2 <- 0
 for (i in 1:50){
     if (rhat1[i] > 2){
-      integral2 = integral2 + 1
+      integral2 = integral2 + rhat1[i]-2
     }
 }
 
+#Estimate integral using true data
 integral3 <- 0
 for (i in 1:50){
   if (r[i] > 2){
-    integral3 = integral3 + 1
+    integral3 = integral3 + r[i]-2
   }
 }
